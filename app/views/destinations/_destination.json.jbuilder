@@ -1,2 +1,4 @@
-json.extract! destination, :id, :created_at, :updated_at
-json.url destination_url(destination, format: :json)
+json.id destination.id
+json.country destination.country
+json.city destination.city
+json.description destination.description

@@ -10,27 +10,27 @@ class DestinationsController < ApplicationController
   end 
 
   def create
-    @destination = Destination.new ( 
-      country: params[:country]. 
+    @destination = Destination.new( 
+      country: params[:country],
       city: params[:city], 
       description: params[:description]
     )
     if @destination.save 
       render json: { message: 'Destination has been saved'}, status: :created
     else
-      render {error: 'The destination cannot be created'}, status: :unprocessable_entity
+      render json: {error: 'The destination cannot be created'}, status: :unprocessable_entity
     end 
   end 
   
   def update 
     @destination = Destination.find_by(id: params[:id])
-    @destination.update( 
+    if @destination 
+      @destination.update( 
       country: params[:country] || @destination.country, 
       city: params[:city] || @destination.city, 
       description: params[:description] || @destination.description   
     )
-    if @destination.save 
-      render json: {message: 'the destination has been updated'}, status: :ok
+    render json: {message: 'the destination has been updated'}, status: :ok
     else 
       render json: {message: 'the destination could not be updated'}, status: :bad_request
     end 
@@ -45,5 +45,5 @@ class DestinationsController < ApplicationController
       render json: {message: 'the destination could not be deleted'}, status: :bad_request
     end 
   end
-  
+
 end
