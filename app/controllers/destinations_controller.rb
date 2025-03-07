@@ -13,7 +13,8 @@ class DestinationsController < ApplicationController
     @destination = Destination.new( 
       country: params[:country],
       city: params[:city], 
-      description: params[:description]
+      description: params[:description], 
+      images: params[:images]
     )
     if @destination.save 
       render json: { message: 'Destination has been saved'}, status: :created
@@ -28,7 +29,8 @@ class DestinationsController < ApplicationController
       @destination.update( 
       country: params[:country] || @destination.country, 
       city: params[:city] || @destination.city, 
-      description: params[:description] || @destination.description   
+      description: params[:description] || @destination.description, 
+      images: params[:images] || @destination.images
     )
     render json: {message: 'the destination has been updated'}, status: :ok
     else 
