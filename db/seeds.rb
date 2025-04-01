@@ -7,3 +7,15 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+
+@destination = Destination.new(
+  country: 'Japan', 
+  city: 'Tokyo', 
+  description: 'Beutiful city in japan'
+)
+if @destination.save 
+  puts 'the city has been created'
+else 
+  puts 'error'
+end 

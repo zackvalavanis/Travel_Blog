@@ -1,8 +1,10 @@
 class DestinationsController < ApplicationController
 
-  def index 
-    render json: { message: 'Yo'}
-  end 
+  def index
+    @destinations = Destination.all
+    render json: @destinations, status: :ok
+  end
+  
 
   def show
     @destination = Destination.find_by(id: params[:id])
