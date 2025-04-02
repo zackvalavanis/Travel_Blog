@@ -8,15 +8,19 @@ class DestinationsController < ApplicationController
 
   def show
     @destination = Destination.find_by(id: params[:id])
-    render :show
-  end 
+    if @destination
+      render :show
+    else
+      render plain: "Destination not found", status: :not_found
+    end
+  end
+  
 
   def create
     @destination = Destination.new( 
       country: params[:country],
       city: params[:city], 
-      description: params[:description], 
-      images: params[:images]
+      description: params[:description]
     )
     if @destination.save 
       render json: { message: 'Destination has been saved'}, status: :created
@@ -31,8 +35,7 @@ class DestinationsController < ApplicationController
       @destination.update( 
       country: params[:country] || @destination.country, 
       city: params[:city] || @destination.city, 
-      description: params[:description] || @destination.description, 
-      images: params[:images] || @destination.images
+      description: params[:description] || @destination.description
     )
     render json: {message: 'the destination has been updated'}, status: :ok
     else 
