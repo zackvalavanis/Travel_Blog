@@ -17,7 +17,7 @@ class ImagesController < ApplicationController
     if @image.save 
       render json: { message: 'The image has been saved'}, status: :created
     else 
-      render json: { error: 'The image has not been created'}, status :bad_request
+      render json: { error: 'The image has not been created'}, status: :bad_request
     end 
   end 
 
