@@ -15,7 +15,7 @@ class ImagesController < ApplicationController
       destination_id: params[:destination_id]
     )
     if @image.save 
-      render json: { message: 'The image has been saved'}, status: :created
+      render json: { message: 'The image has been saved', destination_id: @image.destination_id}, status: :created
     else 
       render json: { error: 'The image has not been created'}, status: :bad_request
     end 
