@@ -9,17 +9,31 @@ class ImagesController < ApplicationController
     render :show 
   end 
 
-  def create 
-    @image = Image.new(
-      image_url: params[:image_url], 
-      destination_id: params[:destination_id]
-    )
-    if @image.save 
-      render json: { message: 'The image has been saved', destination_id: @image.destination_id}, status: :created
-    else 
-      render json: { error: 'The image has not been created'}, status: :bad_request
-    end 
-  end 
+    def create
+      # Permit the nested image parameters (destination_id and image_url)
+      image_params = params.require(:image).permit(:destination_id, :image_url)
+  
+      image_url = image_params[:image_url]
+      destination_id = image_params[:destination_id]
+  
+      # Validate that image_url is present
+      if image_url.blank?
+        render json: { error: 'Image URL cannot be empty' }, status: :bad_request and return
+      end
+  
+      # Create the image
+      @image = Image.new(
+        image_url: image_url,
+        destination_id: destination_id
+      )
+      
+      if @image.save
+        render json: { message: 'Image has been saved', destination_id: destination_id }, status: :created
+      else
+        render json: { error: 'Some images could not be created' }, status: :bad_request
+      end
+    end
+  
 
   def update
     @image = Image.find_by(id: params[:id])
