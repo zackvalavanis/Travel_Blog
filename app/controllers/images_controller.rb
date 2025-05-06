@@ -9,30 +9,32 @@ class ImagesController < ApplicationController
     render :show 
   end 
 
-    def create
-      # Permit the nested image parameters (destination_id and image_url)
-      image_params = params.require(:image).permit(:destination_id, :image_url)
+  def create
+    image_params = params.require(:image).permit(:destination_id, :image_url, :image_file)
+    Rails.logger.debug("Permitted image params: #{image_params.inspect}")
   
-      image_url = image_params[:image_url]
-      destination_id = image_params[:destination_id]
+    destination_id = image_params[:destination_id]
+    image_url = image_params[:image_url]
+    image_file = image_params[:image_file]
   
-      # Validate that image_url is present
-      if image_url.blank?
-        render json: { error: 'Image URL cannot be empty' }, status: :bad_request and return
-      end
-  
-      # Create the image
-      @image = Image.new(
-        image_url: image_url,
-        destination_id: destination_id
-      )
-      
-      if @image.save
-        render json: { message: 'Image has been saved', destination_id: destination_id }, status: :created
-      else
-        render json: { error: 'Some images could not be created' }, status: :bad_request
-      end
+    if image_url.blank? && image_file.blank?
+      render json: { error: 'Please provide either an image URL or upload a file.' }, status: :bad_request and return
     end
+  
+    @image = Image.new(destination_id: destination_id, image_url: image_url)
+    @image.image_file.attach(image_file) if image_file.present?
+  
+    if @image.save
+      render json: {
+        message: 'Image has been saved',
+        destination_id: @image.destination_id,
+        image_url: @image.image_url.presence || url_for(@image.image_file)
+      }, status: :created
+    else
+      render json: { error: @image.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+  
   
 
   def update
