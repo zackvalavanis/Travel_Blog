@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   post '/images' => 'images#create'
   delete '/images/:id' => 'images#destroy'
 
+  post '/users' => 'users#create'
+
   # Defines the root path route ("/")
   # root "posts#index"
 end
