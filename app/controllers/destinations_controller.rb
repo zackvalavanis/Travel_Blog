@@ -17,20 +17,23 @@ class DestinationsController < ApplicationController
   
 
   def create
-    @destination = Destination.new( 
-      country: params[:country],
-      city: params[:city], 
-      description: params[:description], 
-      state: params[:state]
-    )
-    if @destination.save 
-      render json: { message: 'Destination has been saved',
-        destinationid: @destination.id
-      }, status: :created
 
-    else
-      render json: {error: 'The destination cannot be created'}, status: :unprocessable_entity
-    end 
+    # if current_user 
+      @destination = Destination.new( 
+        country: params[:country],
+        city: params[:city], 
+        description: params[:description], 
+        state: params[:state]
+      )
+      if @destination.save 
+        render json: { message: 'Destination has been saved',
+          destinationid: @destination.id
+        }, status: :created
+
+      else
+        render json: {error: 'The destination cannot be created'}, status: :unprocessable_entity
+      end 
+    # end 
   end 
   
   def update 
