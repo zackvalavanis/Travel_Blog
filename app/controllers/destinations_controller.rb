@@ -39,17 +39,21 @@ class DestinationsController < ApplicationController
   def update 
     @destination = Destination.find_by(id: params[:id])
     if @destination 
-      @destination.update( 
-      country: params[:country] || @destination.country, 
-      city: params[:city] || @destination.city, 
-      description: params[:description] || @destination.description, 
-      state: params[:state] || @destination.state
-    )
-    render json: {message: 'the destination has been updated'}, status: :ok
+      if @destination.update(
+        country: params[:destination][:country] || @destination.country, 
+        city: params[:destination][:city] || @destination.city, 
+        description: params[:destination][:description] || @destination.description, 
+        state: params[:destination][:state] || @destination.state
+      )
+        render json: @destination, status: :ok
+      else
+        render json: { errors: @destination.errors.full_messages }, status: :unprocessable_entity
+      end
     else 
-      render json: {message: 'the destination could not be updated'}, status: :bad_request
+      render json: { message: 'the destination could not be updated' }, status: :bad_request
     end 
-  end 
+  end
+  
   
   def destroy 
     @destination = Destination.find_by(id: params[:id])
