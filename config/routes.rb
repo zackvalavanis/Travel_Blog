@@ -22,6 +22,11 @@ Rails.application.routes.draw do
 
   post '/sessions' => 'sessions#create'
 
+  get '/likes' => 'likes#index'
+  post '/likes' => 'likes#create'
+  delete '/likes/:id' => 'likes#destroy'
+
+
   # Defines the root path route ("/")
   # root "posts#index"
 end
