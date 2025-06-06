@@ -18,13 +18,13 @@ class LikesController < ApplicationController
   end
 
   def destroy 
-    @like = like.find_by(user_id: params(:user_id), destination_id: params[:destination_id])
+    @like = Like.find_by(id: params[:id])
     
-    if like 
-      like.destroy 
+    if @like 
+      @like.destroy 
       render json: { message: 'Destination Unliked'}, status: :ok
     else 
-      render json: { messager: 'Like not Found'}, status: :not_found
+      render json: { message: 'Like not Found'}, status: :not_found
     end
   end
 end
