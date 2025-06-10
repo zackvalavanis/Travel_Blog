@@ -69,3 +69,6 @@ end
 gem 'rack-cors'
 
 gem 'jwt'
+
+gem 'graphql'
+gem "graphiql-rails", group: :development
