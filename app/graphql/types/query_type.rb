@@ -18,6 +18,24 @@ module Types
       ids.map { |id| context.schema.object_from_id(id, context) }
     end
 
+    field :users, [Types::UserType], null: false, description: 'Returns all users'
+
+    def users
+      User.all
+    end
+
+    field :destinations, [Types::DestinationType], null:false, description: 'Returns the city and country of destination'
+
+    def destinations
+      Destination.all
+    end
+
+    field :likes, [Types::LikeType], null:false, description: 'Returns the liked destinations of that user'
+
+    def likes 
+      Like.all
+    end
+
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
