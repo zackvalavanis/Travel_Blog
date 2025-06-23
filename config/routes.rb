@@ -23,11 +23,14 @@ Rails.application.routes.draw do
 
   get '/users' => 'users#index'
   get '/users/:id' => 'users#show'
+  delete '/users/:id' => 'users#destroy'
+  
   post '/users' => 'users#create'
 
   post '/sessions' => 'sessions#create'
 
   get '/likes' => 'likes#index'
+  get '/likes' => 'likes#show'
   post '/likes' => 'likes#create'
   delete '/likes/:id' => 'likes#destroy'
 

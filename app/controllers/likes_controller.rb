@@ -4,6 +4,10 @@ class LikesController < ApplicationController
     @likes = Like.all
     render :index
   end
+  def show
+    @likes = Like.where(user_id: params[:user_id])
+    render :show
+  end
   
   def create 
     @like = Like.new(
