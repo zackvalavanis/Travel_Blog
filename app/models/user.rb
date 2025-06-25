@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :likes
   has_many :destinations, through: :likes
   has_one_attached :profile_image
+  has_one_attached :background_image
 
   def profile_image_url
     Rails.application.routes.url_helpers.url_for(profile_image) if profile_image.attached?

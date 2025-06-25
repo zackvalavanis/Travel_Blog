@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception, unless: -> { request.format.json? }
+  protect_from_forgery with: :exception, unless: -> {
+    request.format.json? || request.content_type =~ %r{multipart/form-data}
+  }
 
   def current_user
     auth_headers = request.headers["Authorization"]

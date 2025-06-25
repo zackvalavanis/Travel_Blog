@@ -24,8 +24,8 @@ Rails.application.routes.draw do
   get '/users' => 'users#index'
   get '/users/:id' => 'users#show'
   delete '/users/:id' => 'users#destroy'
-  
   post '/users' => 'users#create'
+  patch '/users/:id' => 'users#update'
 
   post '/sessions' => 'sessions#create'
 
