@@ -18,7 +18,7 @@ class UsersController < ApplicationController
       name: @user.name,
       email: @user.email,
       profile_image_url: @user.profile_image.attached? ? url_for(@user.profile_image) : nil,
-      background_image_url: @user.background_image.attached? ? url_for(@user.background_image) : nil,
+      # background_image_url: @user.background_image.attached? ? url_for(@user.background_image) : nil,
       likes: @user.likes.map do |like|
         {
           id: like.id,
@@ -27,7 +27,7 @@ class UsersController < ApplicationController
             city: like.destination.city,
             country: like.destination.country,
             description: like.destination.description,
-            image: like.destination.images.map { |img| url_for(img) }
+            # image: like.destination.images.map { |img| url_for(img) }
           }
         }
       end
@@ -70,10 +70,10 @@ class UsersController < ApplicationController
       @user.profile_image.attach(params[:profile_image])
     end
 
-    if params[:background_image].present?
-      @user.background_image.purge if @user.background_image.attached?
-      @user.background_image.attach(params[:background_image])
-    end
+    # if params[:background_image].present?
+    #   @user.background_image.purge if @user.background_image.attached?
+    #   @user.background_image.attach(params[:background_image])
+    # end
   
     if @user.save
       render json: { message: "Profile image updated successfully" }, status: :ok
