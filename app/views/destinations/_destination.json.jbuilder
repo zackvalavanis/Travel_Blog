@@ -3,6 +3,7 @@ json.country destination.country
 json.city destination.city
 json.description destination.description
 json.images destination.images
+json.user_id destination.user_id
 json.images destination.images.map { |image| 
   {
     id: image.id,
