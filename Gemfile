@@ -72,3 +72,9 @@ gem 'jwt'
 
 gem 'graphql'
 gem "graphiql-rails", group: :development
+
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+
+gem 'dotenv-rails', groups: [:development, :test]
+

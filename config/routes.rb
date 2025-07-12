@@ -29,6 +29,9 @@ Rails.application.routes.draw do
 
   post '/sessions' => 'sessions#create'
 
+  get '/auth/:provider/callback', to: 'sessions#google_auth'
+  get '/auth/failure', to: redirect('/')
+  
   get '/likes' => 'likes#index'
   get '/likes' => 'likes#show'
   post '/likes' => 'likes#create'

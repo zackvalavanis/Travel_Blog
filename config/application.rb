@@ -8,6 +8,12 @@ Bundler.require(*Rails.groups)
 
 module TravelBlog
   class Application < Rails::Application
+
+    config.after_initialize do 
+      puts "=== MIDDLEWARE STACK ==="
+      Rails.application.middleware.each { |m| puts m.inspect}
+    end
+    
     config.active_record.query_log_tags_enabled = true
     config.active_record.query_log_tags = [
       # Rails query log tags:
