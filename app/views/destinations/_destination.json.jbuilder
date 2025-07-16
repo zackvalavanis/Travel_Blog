@@ -4,6 +4,8 @@ json.city destination.city
 json.description destination.description
 json.images destination.images
 json.user_id destination.user_id
+json.user_name destination.user&.name&.capitalize
+
 json.images destination.images.map { |image| 
   {
     id: image.id,
