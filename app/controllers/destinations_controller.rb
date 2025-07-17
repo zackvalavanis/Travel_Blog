@@ -17,35 +17,72 @@ class DestinationsController < ApplicationController
   
 
   def create
-
-      user = User.find_by(id: params[:user_id])
-      if user.nil?
-        render json: { error: "User not found" }, status: :unprocessable_entity
-        return
-      end
-
-      @destination = Destination.new( 
+    user = User.find_by(id: params[:user_id])
+    if user.nil?
+      render json: { error: "User not found" }, status: :unprocessable_entity
+      return
+    end
+  
+    @destination = Destination.new(
+      user_id: params[:user_id],
+      country: params[:country],
+      city: params[:city],
+      description: params[:description],
+      state: params[:state]
+    )
+  
+    if @destination.save
+      # Create Like
+      @like = Like.new(
         user_id: params[:user_id],
-        country: params[:country],
-        city: params[:city], 
-        description: params[:description], 
-        state: params[:state]
+        destination_id: @destination.id
       )
-      if @destination.save 
-        render json: { message: 'Destination has been saved',
-          destinationid: @destination.id
-        }, status: :created
-      else
-        render json: {error: 'The destination cannot be created'}, status: :unprocessable_entity
-      end 
-  end 
+      @like.save
+  
+      # Handle images param which might be JSON string or array of hashes
+      images_params = []
+      if params[:images].present?
+        if params[:images].is_a?(String)
+          begin
+            images_params = JSON.parse(params[:images])
+          rescue JSON::ParserError => e
+            Rails.logger.error("Failed to parse images JSON: #{e.message}")
+            images_params = []
+          end
+        elsif params[:images].is_a?(Array)
+          images_params = params[:images]
+        end
+      end
+  
+      images_params.each do |image_param|
+        image = Image.new(destination_id: @destination.id)
+        # use string or symbol keys for safety
+        image.image_url = image_param['image_url'] || image_param[:image_url] if image_param['image_url'].present? || image_param[:image_url].present?
+        
+        if image_param['image_file'].present? || image_param[:image_file].present?
+          file = image_param['image_file'] || image_param[:image_file]
+          image.image_file.attach(file)
+        end
+  
+        unless image.save
+          Rails.logger.error("Failed to save image: #{image.errors.full_messages.join(', ')}")
+        end
+      end
+  
+      render json: { message: 'Destination has been saved and liked' }, status: :created
+    else
+      render json: { error: 'The destination cannot be created' }, status: :unprocessable_entity
+    end
+  end
+  
+  
   
   def update 
     @destination = Destination.find_by(id: params[:id])
     if @destination && current_user
-      if@destination.user_id != current_user.id
+      if @destination.user_id != current_user.id
         render json: { error: 'You are not authorized to edit this'}, status: :unauthorized
-      elseif @destination.update(
+      elsif @destination.update(
         country: params[:destination][:country] || @destination.country, 
         city: params[:destination][:city] || @destination.city, 
         description: params[:destination][:description] || @destination.description, 
@@ -74,6 +111,7 @@ class DestinationsController < ApplicationController
     end
   
     if current_user.id == @destination.user_id
+      @destination.likes.destroy_all
       @destination.destroy
       render json: { message: 'The destination has been deleted' }, status: :ok
     else
